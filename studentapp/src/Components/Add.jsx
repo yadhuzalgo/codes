@@ -2,24 +2,31 @@ import { Button, TextField, Typography } from '@mui/material'
 import axios from 'axios'
 import React, { useState } from 'react'
 
-const Add = () => {
-    var[input,setInput]=useState({
-        name:'',
-        grade:''
-    })
+const Add = (props) => {
+    var[input,setInput]=useState(props.data)
+    console.log(props.data)
+
     const inputHandler = (e)=>{
         const{name,value}= e.target 
         setInput({...input,[name]:value})
     }
     const readValues = ()=>{
          console.log("clicked")
-         axios
-         .post("http://localhost:3005/student",input)
+         if(props.method=="post"){
+         axios.post("http://localhost:3005/student",input)
          .then(response=>{
             alert("successfully added")
          })
          .catch(error=>console.log(error))
-        }
+        }else if(props.method=="put"){
+        axios.put("http://localhost:3005/student/"+input.id,input)
+        .then(response=>{
+          alert("Update successfully")
+          window.location.reload(false)
+        })
+        .catch(error=>console.log(error))
+      }
+    }
   return (
     <div>
       <TextField label="name" name='name'variant="outlined" value={input.name} onChange={inputHandler}/> <p/>
